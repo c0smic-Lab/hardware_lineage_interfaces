@@ -128,7 +128,7 @@ void PowerSessionManager::addPowerSession(const std::string &idString, int64_t s
         addedRes = mSessionTaskMap.add(sessionId, sve, {});
     }
     if (!addedRes) {
-        ALOGE("sessionTaskMap failed to add power session: %ld", sessionId);
+        ALOGE("sessionTaskMap failed to add power session: %" PRId64, sessionId);
     }
 
     setThreadsFromPowerSession(sessionId, threadIds);
@@ -236,12 +236,12 @@ void PowerSessionManager::pause(int64_t sessionId) {
         std::lock_guard<std::mutex> lock(mSessionTaskMapMutex);
         auto sessValPtr = mSessionTaskMap.findSession(sessionId);
         if (nullptr == sessValPtr) {
-            ALOGW("Pause failed, session is null %ld", sessionId);
+            ALOGW("Pause failed, session is null %" PRId64, sessionId);
             return;
         }
 
         if (!sessValPtr->isActive) {
-            ALOGW("Sess(%ld), cannot pause, already inActive", sessionId);
+            ALOGW("Sess(%" PRId64 "), cannot pause, already inActive", sessionId);
             return;
         }
         sessValPtr->isActive = false;
@@ -255,12 +255,12 @@ void PowerSessionManager::resume(int64_t sessionId) {
         std::lock_guard<std::mutex> lock(mSessionTaskMapMutex);
         auto sessValPtr = mSessionTaskMap.findSession(sessionId);
         if (nullptr == sessValPtr) {
-            ALOGW("Resume failed, session is null %ld", sessionId);
+            ALOGW("Resume failed, session is null %" PRId64, sessionId);
             return;
         }
 
         if (sessValPtr->isActive) {
-            ALOGW("Sess(%ld), cannot resume, already active", sessionId);
+            ALOGW("Sess(%" PRId64 "), cannot resume, already active", sessionId);
             return;
         }
         sessValPtr->isActive = true;
@@ -275,7 +275,7 @@ void PowerSessionManager::updateTargetWorkDuration(int64_t sessionId, AdpfHintTy
     std::lock_guard<std::mutex> lock(mSessionTaskMapMutex);
     auto sessValPtr = mSessionTaskMap.findSession(sessionId);
     if (nullptr == sessValPtr) {
-        ALOGE("Failed to updateTargetWorkDuration, session val is null id: %ld", sessionId);
+        ALOGE("Failed to updateTargetWorkDuration, session val is null id: %" PRId64, sessionId);
         return;
     }
 
@@ -300,7 +300,6 @@ void PowerSessionManager::voteSet(int64_t sessionId, AdpfHintType voteId, int uc
             // Because of the async nature of some events an event for a session
             // that has been removed is a possibility so this is a verbose log
             // instead of a warning or error
-            // ALOGV("voteSet ignoring missing session %ld", sessionId);
             return;
         }
 
@@ -334,7 +333,6 @@ void PowerSessionManager::disableBoosts(int64_t sessionId) {
             // Because of the async nature of some events an event for a session
             // that has been removed is a possibility so this is a verbose log
             // instead of a warning or error
-            // ALOGV("voteSet ignoring missing session %ld", sessionId);
             return;
         }
 
